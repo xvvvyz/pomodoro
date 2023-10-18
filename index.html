@@ -1,0 +1,132 @@
+<!doctype html>
+<meta charset="utf-8" />
+<meta name="color-scheme" content="dark light" />
+<meta name="robots" content="noindex" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>00:00</title>
+
+<style>
+  :root {
+    --color-background: #111;
+    --color-text-subtle: #666;
+    --color-text: #eee;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --color-background: #eee;
+      --color-text-subtle: #999;
+      --color-text: #111;
+    }
+  }
+
+  html {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: monospace;
+    font-size: 18px;
+  }
+
+  body {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    margin: 0;
+    min-height: 100vh;
+    width: 100vw;
+  }
+
+  time {
+    display: flex;
+    padding: 1rem;
+  }
+
+  button {
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.75rem;
+    height: 2.5rem;
+    position: relative;
+    width: 2.5rem;
+  }
+
+  button:active {
+    transform: translateY(1px);
+  }
+
+  button::before {
+    background: var(--color-text);
+    border-radius: 50%;
+    content: ' ';
+    height: 100%;
+    left: 0;
+    opacity: 0.05;
+    position: absolute;
+    top: 0;
+    transition: opacity 0.2s;
+    width: 100%;
+  }
+
+  button:hover::before {
+    opacity: 0.1;
+  }
+
+  .milliseconds {
+    color: var(--color-text-subtle);
+  }
+
+  @media (min-width: 500px) {
+    body {
+      flex-direction: row;
+    }
+  }
+</style>
+
+<button data-modify="-1">-1</button>
+<button data-set="25">25</button>
+<time>
+  <span class="minutes-seconds">00:00</span>
+  <span class="milliseconds">000</span>
+</time>
+<button data-set="5">5</button>
+<button data-modify="1">+1</button>
+
+<script>
+  let active, end;
+
+  const tick = () => {
+    active = true;
+    const t = end - new Date().getTime();
+    const m = Math.max(Math.floor(t / 60000), 0);
+    const [s, ms] = String(Math.max((t % 60000) / 1000, 0)).split('.');
+    const mf = String(m).padStart(2, '0');
+    const sf = s.padStart(2, '0');
+    const msf = (ms ?? '0').padStart(3, '0');
+    document.title = `${mf}:${sf}`;
+    document.querySelector('.minutes-seconds').innerText = document.title;
+    document.querySelector('.milliseconds').innerText = msf;
+    if (t < 0) active = false;
+    else requestAnimationFrame(tick);
+  };
+
+  Array.from(document.querySelectorAll('[data-set]')).forEach((el) =>
+    el.addEventListener('click', (e) => {
+      end = new Date().getTime() + Number(el.dataset.set) * 60000;
+      if (!active) tick();
+    })
+  );
+
+  Array.from(document.querySelectorAll('[data-modify]')).forEach((el) =>
+    el.addEventListener('click', (e) => {
+      if (active) end += Number(el.dataset.modify) * 60000;
+    })
+  );
+</script>
