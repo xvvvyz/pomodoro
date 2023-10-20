@@ -24,7 +24,7 @@
     background-color: var(--color-background);
     color: var(--color-text);
     font-family: monospace;
-    font-size: 18px;
+    font-size: clamp(18px, 2.5vw, 20px);
   }
 
   body {
@@ -68,7 +68,7 @@
     content: ' ';
     height: 100%;
     left: 0;
-    opacity: 0.05;
+    opacity: 0.1;
     position: absolute;
     top: 0;
     transition: opacity 0.2s;
@@ -76,7 +76,7 @@
   }
 
   button:hover::before {
-    opacity: 0.1;
+    opacity: 0.2;
   }
 
   .milliseconds {
