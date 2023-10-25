@@ -26,26 +26,29 @@
 <button data-modify="1">+1</button>
 
 <script>
-  let running, end;
+  let end, interval;
 
-  const tick = () => {
+  function modify(minutes) {
+    end += Number(minutes) * 60000;
+  }
+
+  function set(minutes) {
+    end = new Date().getTime() + Number(minutes) * 60000;
+    clearInterval(interval);
+    interval = setInterval(tick, 50);
+  }
+
+  function tick() {
     const t = end - new Date().getTime();
-    const m = String(Math.max(Math.floor(t / 60000), 0));
-    const s = String(Math.max(Math.floor((t % 60000) / 1000), 0));
-    document.title = `${m.padStart(2, '0')}:${s.padStart(2, '0')}`;
-    document.querySelector('time').innerText = document.title;
-    if (t < 0) running = false;
-    else requestAnimationFrame(tick);
-  };
+    if (t < 0) clearInterval(interval);
+    const minutes = String(Math.max(Math.floor(t / 60000), 0));
+    const seconds = String(Math.max(Math.floor((t % 60000) / 1000), 0));
+    const formatted = `${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
+    document.title = document.querySelector('time').innerText = formatted;
+  }
 
   document.body.addEventListener('click', (e) => {
-    if (e.target.dataset.modify && running) {
-      end += Number(e.target.dataset.modify) * 60000;
-    } else if (e.target.dataset.set) {
-      end = new Date().getTime() + Number(e.target.dataset.set) * 60000;
-      if (running) return;
-      running = true;
-      tick();
-    }
+    if (e.target.dataset.modify) modify(e.target.dataset.modify);
+    if (e.target.dataset.set) set(e.target.dataset.set);
   });
 </script>
