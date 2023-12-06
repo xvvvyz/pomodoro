@@ -21,6 +21,7 @@
 
 <button data-modify="-1">-1</button>
 <button data-set="25">25</button>
+<span>0</span>
 <time>00:00</time>
 <button data-set="5">5</button>
 <button data-modify="1">+1</button>
@@ -36,6 +37,11 @@
     end = new Date().getTime() + Number(minutes) * 60000;
     clearInterval(interval);
     interval = setInterval(tick, 50);
+
+    if (minutes === '25') {
+      const countEl = document.querySelector('span');
+      countEl.innerText = Number(countEl.innerText) + 1;
+    }
   }
 
   function tick() {
