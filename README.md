@@ -1,9 +1,5 @@
 # Pomodoro
 
-> Minimal pomodoro timer.
-
-## Basic Usage
-
 1. Start by identifying the task or project that you will be working on.
 
 2. Click "25". Start working on your task until the timer reaches 0.
